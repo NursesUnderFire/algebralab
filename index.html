@@ -1,1 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATH VOCABULARY TRANSLATOR – Turn math words into math.</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body>
+    <!-- Header / Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-language"></i> MATH VOCABULARY TRANSLATOR</h1>
+                <p class="tagline">Turn math words into math.</p>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="#home" class="nav-link active" data-page="home"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#learn" class="nav-link" data-page="learn"><i class="fas fa-book"></i> Learn</a></li>
+                    <li><a href="#practice" class="nav-link" data-page="practice"><i class="fas fa-pencil-alt"></i> Practice</a></li>
+                    <li><a href="#mistakes" class="nav-link" data-page="mistakes"><i class="fas fa-chart-bar"></i> Mistakes</a></li>
+                    <li><a href="#about" class="nav-link" data-page="about"><i class="fas fa-info-circle"></i> About</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <button id="themeToggle" class="icon-btn" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+                <button id="settingsToggle" class="icon-btn" aria-label="Open settings"><i class="fas fa-cog"></i></button>
+            </div>
+        </div>
+    </header>
 
+    <!-- Main Content -->
+    <main class="main container">
+        <!-- Home Page (Translator) -->
+        <section id="home-page" class="page active">
+            <div class="translator-card card">
+                <h2><i class="fas fa-exchange-alt"></i> Translate a Math Phrase</h2>
+                <div class="input-group">
+                    <div class="search-bar">
+                        <input type="text" id="phraseInput" placeholder="Type a math phrase, e.g., 'twice a number increased by five'">
+                        <button id="translateBtn" class="btn-primary"><i class="fas fa-search"></i> Translate</button>
+                    </div>
+                    <div class="quick-examples">
+                        <p>Try: <span class="example-link" data-phrase="the sum of a number and 7">sum of a number and 7</span> •
+                            <span class="example-link" data-phrase="5 less than twice x">5 less than twice x</span> •
+                            <span class="example-link" data-phrase="the product of 3 and the square of y">product of 3 and square of y</span> •
+                            <span class="example-link" data-phrase="area of a circle with radius r">area of a circle with radius r</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="difficulty-filter">
+                    <label>Filter by difficulty:</label>
+                    <select id="difficultySelect">
+                        <option value="all">All</option>
+                        <option value="elementary">Elementary</option>
+                        <option value="middle">Middle</option>
+                        <option value="algebra1">Algebra I</option>
+                        <option value="algebra2">Algebra II</option>
+                        <option value="precalc">Precalc</option>
+                        <option value="calculus">Calculus</option>
+                        <option value="stats">Stats</option>
+                    </select>
+                </div>
+
+                <div class="output-panel">
+                    <div class="output-header">
+                        <h3><i class="fas fa-code"></i> Translation Result</h3>
+                        <div class="output-actions">
+                            <button id="copyPlain" class="btn-outline" title="Copy plain expression"><i class="far fa-copy"></i> Copy</button>
+                            <button id="copyLaTeX" class="btn-outline" title="Copy LaTeX"><i class="fas fa-square-root-alt"></i> LaTeX</button>
+                            <button id="speakOutput" class="btn-outline" title="Speak expression"><i class="fas fa-volume-up"></i> Speak</button>
+                        </div>
+                    </div>
+                    <div class="output-content">
+                        <div class="expression-display">
+                            <div class="expression-box">
+                                <h4>Plain Expression</h4>
+                                <pre id="plainExpression">No translation yet.</pre>
+                            </div>
+                            <div class="expression-box">
+                                <h4>LaTeX / Math</h4>
+                                <div id="latexExpression">\[ \text{Enter a phrase to see LaTeX} \]</div>
+                            </div>
+                        </div>
+
+                        <div class="explanation-box">
+                            <h4><i class="fas fa-list-ol"></i> Step‑by‑Step Explanation</h4>
+                            <div id="explanationList">
+                                <p class="placeholder">The explanation will appear here, showing how each word maps to symbols.</p>
+                            </div>
+                        </div>
+
+                        <div class="traps-box">
+                            <h4><i class="fas fa-exclamation-triangle"></i> Common Traps & Misconceptions</h4>
+                            <div id="trapsList">
+                                <p class="placeholder">Common pitfalls related to this phrase will be highlighted here.</p>
+                            </div>
+                        </div>
+
+                        <div class="practice-box">
+                            <h4><i class="fas fa-dumbbell"></i> Practice This Pattern</h4>
+                            <p>Try these similar phrases to reinforce the pattern:</p>
+                            <ul id="practiceList">
+                                <li>Loading practice…</li>
+                            </ul>
+                            <div class="practice-actions">
+                                <button id="generateMorePractice" class="btn-outline">Generate More</button>
+                                <button id="checkPractice" class="btn-primary" disabled>Check Answers</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-card card">
+                <h3><i class="fas fa-history"></i> Recent Translations</h3>
+                <ul id="recentList">
+                    <li>No recent translations.</li>
+                </ul>
+                <button id="clearRecent" class="btn-text">Clear History</button>
+            </div>
+        </section>
+
+        <!-- Learn Page (Curriculum) -->
+        <section id="learn-page" class="page">
+            <div class="page-header">
+                <h2><i class="fas fa-book"></i> Learn Math Vocabulary</h2>
+                <p>Browse lessons by category. Each lesson explains how specific words map to mathematical symbols.</p>
+            </div>
+            <div class="categories-grid" id="learnCategories">
+                <!-- Filled by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Practice Page -->
+        <section id="practice-page" class="page">
+            <div class="page-header">
+                <h2><i class="fas fa-pencil-alt"></i> Practice</h2>
+                <p>Test your translation skills with generated problems. Choose a topic and difficulty.</p>
+            </div>
+            <div class="practice-setup card">
+                <div class="setup-row">
+                    <div class="setup-group">
+                        <label>Topic:</label>
+                        <select id="practiceTopic">
+                            <option value="all">All Topics</option>
+                            <option value="operations">Operations</option>
+                            <option value="comparison">Comparison</option>
+                            <option value="percent">Percent/Ratio</option>
+                            <option value="functions">Functions</option>
+                            <option value="geometry">Geometry</option>
+                            <option value="sequences">Sequences</option>
+                            <option value="calculus">Calculus</option>
+                            <option value="stats">Statistics</option>
+                        </select>
+                    </div>
+                    <div class="setup-group">
+                        <label>Difficulty:</label>
+                        <select id="practiceDifficulty">
+                            <option value="elementary">Elementary</option>
+                            <option value="middle">Middle</option>
+                            <option value="algebra1">Algebra I</option>
+                            <option value="algebra2">Algebra II</option>
+                            <option value="precalc">Precalc</option>
+                            <option value="calculus">Calculus</option>
+                            <option value="stats">Stats</option>
+                        </select>
+                    </div>
+                    <div class="setup-group">
+                        <label>Number of questions:</label>
+                        <select id="practiceCount">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                        </select>
+                    </div>
+                    <div class="setup-group">
+                        <label>
+                            <input type="checkbox" id="timedMode"> Timed mode (60s)
+                        </label>
+                    </div>
+                </div>
+                <button id="startPractice" class="btn-primary"><i class="fas fa-play"></i> Start Practice Session</button>
+            </div>
+
+            <div class="practice-session hidden">
+                <div class="session-header">
+                    <h3>Practice Session</h3>
+                    <div class="session-info">
+                        <span id="timer">60</span>s left •
+                        <span id="progress">0/10</span> correct
+                    </div>
+                </div>
+                <div class="question-card card">
+                    <h4 id="questionPhrase">Phrase will appear here.</h4>
+                    <div class="answer-input">
+                        <input type="text" id="practiceAnswer" placeholder="Type your mathematical expression">
+                        <button id="submitAnswer" class="btn-primary">Submit</button>
+                    </div>
+                    <div class="feedback hidden" id="questionFeedback">
+                        <!-- Feedback shown here -->
+                    </div>
+                </div>
+                <div class="session-actions">
+                    <button id="nextQuestion" class="btn-outline">Next Question</button>
+                    <button id="endPractice" class="btn-danger">End Session</button>
+                </div>
+            </div>
+
+            <div class="practice-results hidden card">
+                <h3>Session Results</h3>
+                <div class="results-grid">
+                    <div class="result-box">
+                        <h4>Score</h4>
+                        <p id="scoreValue">0%</p>
+                    </div>
+                    <div class="result-box">
+                        <h4>Time</h4>
+                        <p id="timeValue">0s</p>
+                    </div>
+                    <div class="result-box">
+                        <h4>Mistakes</h4>
+                        <p id="mistakesValue">0</p>
+                    </div>
+                </div>
+                <div class="mistake-breakdown">
+                    <h4>Mistake Types</h4>
+                    <canvas id="mistakeChart" width="400" height="200"></canvas>
+                </div>
+                <button id="reviewMistakes" class="btn-outline">Review Mistakes</button>
+            </div>
+        </section>
+
+        <!-- Mistakes Dashboard Page -->
+        <section id="mistakes-page" class="page">
+            <div class="page-header">
+                <h2><i class="fas fa-chart-bar"></i> Mistake Dashboard</h2>
+                <p>Track your progress and see which error types you make most often.</p>
+            </div>
+            <div class="dashboard-card card">
+                <div class="dashboard-header">
+                    <h3>Error Analysis</h3>
+                    <button id="clearMistakes" class="btn-text">Clear All Data</button>
+                </div>
+                <div class="charts-row">
+                    <div class="chart-container">
+                        <h4>Mistakes by Type (Last 30 days)</h4>
+                        <canvas id="mistakeTypeChart" width="400" height="300"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h4>Accuracy Over Time</h4>
+                        <canvas id="accuracyChart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+                <div class="mistake-list">
+                    <h4>Recent Mistakes</h4>
+                    <table id="mistakeTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Phrase</th>
+                                <th>Your Answer</th>
+                                <th>Correct Answer</th>
+                                <th>Error Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Filled by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Page -->
+        <section id="about-page" class="page">
+            <div class="page-header">
+                <h2><i class="fas fa-info-circle"></i> About This Tool</h2>
+                <p>How the Math Vocabulary Translator works, its limitations, and privacy information.</p>
+            </div>
+            <div class="about-content card">
+                <h3><i class="fas fa-cogs"></i> How It Works</h3>
+                <p>The translator uses a <strong>rule‑based parser</strong> that recognizes common math‑word patterns. It does <em>not</em> use AI or external APIs; everything runs in your browser.</p>
+                <ul>
+                    <li><strong>Tokenization:</strong> The phrase is split into words and phrases.</li>
+                    <li><strong>Pattern matching:</strong> Rules match phrases like “more than” to addition, “less than” to subtraction (with reversal).</li>
+                    <li><strong>Symbol mapping:</strong> Each matched pattern produces a corresponding mathematical symbol or expression.</li>
+                    <li><strong>Parenthesis insertion:</strong> The parser adds parentheses where needed for correct order of operations.</li>
+                </ul>
+
+                <h3><i class="fas fa-exclamation-circle"></i> Limitations</h3>
+                <ul>
+                    <li>The parser works best on <strong>standardized, textbook‑style phrasing</strong>. It may struggle with highly colloquial or ambiguous wording.</li>
+                    <li>It currently supports <strong>single‑variable</strong> expressions; multi‑variable systems are partially supported.</li>
+                    <li>Some calculus and statistics phrases are translated to <strong>symbolic forms</strong> rather than full computations.</li>
+                    <li>If a phrase is ambiguous, the tool may offer <strong>multiple possible translations</strong> and ask you to choose.</li>
+                </ul>
+
+                <h3><i class="fas fa-shield-alt"></i> Privacy</h3>
+                <p><strong>All data stays on your device.</strong> No phrases, translations, or mistake logs are sent to any server. The tool uses <code>localStorage</code> to save your recent translations, practice results, and mistake dashboard data. You can clear this data at any time via the “Clear All Data” button on the Mistakes page.</p>
+
+                <h3><i class="fas fa-code"></i> Open Source</h3>
+                <p>This project is open‑source. You can view the code, suggest improvements, or contribute on GitHub.</p>
+
+                <h3><i class="fas fa-bug"></i> Report a Wrong Translation</h3>
+                <p>If the translator gives an incorrect result, please let us know using the feedback modal. Your report helps improve the rule set.</p>
+                <button id="openFeedbackModal" class="btn-outline"><i class="fas fa-comment-alt"></i> Open Feedback Modal</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="modal hidden">
+        <div class="modal-content card">
+            <h3><i class="fas fa-exclamation-triangle"></i> Report a Wrong Translation</h3>
+            <p>Help us improve by describing the issue.</p>
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <label for="feedbackPhrase">Original Phrase</label>
+                    <input type="text" id="feedbackPhrase" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="feedbackTranslation">Translation Given</label>
+                    <input type="text" id="feedbackTranslation" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="feedbackCorrect">What you believe is correct</label>
+                    <textarea id="feedbackCorrect" placeholder="Describe the correct translation or rule..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="feedbackComments">Additional comments</label>
+                    <textarea id="feedbackComments" placeholder="Any other details..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancelFeedback" class="btn-outline">Cancel</button>
+                    <button type="submit" class="btn-primary">Submit Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal hidden">
+        <div class="modal-content card">
+            <h3><i class="fas fa-cog"></i> Settings</h3>
+            <form id="settingsForm">
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="settingDarkMode"> Dark mode
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="settingSpeakResults"> Speak results aloud
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="settingSaveHistory"> Save translation history
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Default difficulty</label>
+                    <select id="settingDefaultDifficulty">
+                        <option value="all">All</option>
+                        <option value="elementary">Elementary</option>
+                        <option value="middle">Middle</option>
+                        <option value="algebra1">Algebra I</option>
+                        <option value="algebra2">Algebra II</option>
+                        <option value="precalc">Precalc</option>
+                        <option value="calculus">Calculus</option>
+                        <option value="stats">Stats</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancelSettings" class="btn-outline">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Settings</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>MATH VOCABULARY TRANSLATOR – Turn math words into math. &copy; <span id="currentYear">2025</span></p>
+            <p class="footer-links">
+                <a href="#about" class="nav-link" data-page="about">About</a> •
+                <a href="#privacy">Privacy</a> •
+                <a href="#terms">Terms</a> •
+                <a href="#contact">Contact</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="data/examples.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
